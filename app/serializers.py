@@ -19,8 +19,9 @@ class UserSerializer(serializers.Serializer):
 
 
 class PetSerializer(serializers.Serializer):
-    name = serializers.CharField(max_length=50)
-    breed = serializers.ChoiceField(choices=Pet.BREED_CHOICES)
+    pet_id = serializers.IntegerField()
+    animal = serializers.ChoiceField(choices=Pet.ANIMAL_CHOICES)
+    breed = serializers.CharField(max_length=50)
     climate = serializers.CharField(max_length=50)
 
     def create(self, validated_data):
@@ -29,7 +30,7 @@ class PetSerializer(serializers.Serializer):
 
 class UserProfileSerializer(serializers.Serializer):
     user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
-    favorite_pet = serializers.ListField(child=serializers.PrimaryKeyRelatedField(queryset=Pet.objects.all()))
+    favorite_pets = serializers.ListField(child=serializers.PrimaryKeyRelatedField(queryset=Pet.objects.all()))
 
     def create(self, validated_data):
         return UserProfile(**validated_data)

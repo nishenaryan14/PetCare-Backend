@@ -30,6 +30,15 @@ class LoginView(APIView):
             return Response({"error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
 
 
+def create_pet(pet_data):
+    serializer = PetSerializer(data=pet_data)
+    if serializer.is_valid():
+        pet = serializer.save()
+        return pet
+    else:
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
 class AddFavoritePetView(APIView):
     def post(self, request, user_id):
         try:
@@ -37,17 +46,23 @@ class AddFavoritePetView(APIView):
         except DoesNotExist:
             return Response({"error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
 
+        pet_id = request.data.get('pet_id')
+        if not pet_id:
+            return Response({'error': 'Missing pet_id in request data'}, status=status.HTTP_400_BAD_REQUEST)
+
         try:
-            pet = Pet.objects.get(id=request.data.get('pet_id'))
+            pet = Pet.objects.get(pet_id=pet_id)
         except DoesNotExist:
-            return Response({"error": "Pet not found"}, status=status.HTTP_404_NOT_FOUND)
+            pet = create_pet(request.data)
 
         try:
             profile = UserProfile.objects.get(user=user)
         except DoesNotExist:
             profile = UserProfile(user=user)
 
-        profile.favorite_pet.append(pet)
+        if not isinstance(pet, Pet):
+            return pet
+
+        profile.favorite_pets.append(pet)
         profile.save()
         return Response({"message": "Pet added to favorites"}, status=status.HTTP_200_OK)
-

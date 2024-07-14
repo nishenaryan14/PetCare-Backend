@@ -1,22 +1,23 @@
 # Create your models here.
 
 from mongoengine import *
-from django.contrib.auth.hashers import make_password
+from django.contrib.auth.hashers import make_password, check_password
 
 
 class Pet(Document):
-    BREED_CHOICES = [
+    ANIMAL_CHOICES = [
         ('dog', 'Dog'),
         ('cat', 'Cat'),
         ('bird', 'Bird')
     ]
 
-    name = StringField(max_length=50)
-    breed = StringField(choices=BREED_CHOICES)
+    pet_id = IntField(unique=True, primary_key=True)
+    animal = StringField(choices=ANIMAL_CHOICES)
+    breed = StringField(max_length=50)
     climate = StringField(max_length=50)
 
     def __str__(self):
-        return self.name
+        return self.animal
 
 
 class User(Document):
@@ -30,6 +31,9 @@ class User(Document):
     def set_password(self, raw_password):
         self.password = make_password(raw_password)
         self.save()
+
+    def check_password(self, raw_password):
+        return check_password(raw_password, self.password)
 
 
 class UserProfile(Document):
