@@ -412,12 +412,12 @@ class AddFavoritePetView(APIView):
         except DoesNotExist:
             return Response({"error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
 
-        pet_id = request.data.get('pet_id')
-        if not pet_id:
-            return Response({'error': 'Missing pet_id in request data'}, status=status.HTTP_400_BAD_REQUEST)
+        breed = request.data.get('breed')
+        if not breed:
+            return Response({'error': 'Missing breed in request data'}, status=status.HTTP_400_BAD_REQUEST)
 
         try:
-            pet = Pet.objects.get(pet_id=pet_id)  # Use MongoEngine's get with pk
+            pet = Pet.objects.get(breed=breed)  # Use MongoEngine's get with pk
 
         except DoesNotExist:
             print("Pet does not exist")
@@ -459,7 +459,7 @@ class GetFavoritePetsView(APIView):
         try:
             user_profile = UserProfile.objects.get(user=user)
         except DoesNotExist:
-            return Response({"error": "User profile not found"}, status=status.HTTP_404_NOT_FOUND)
+            return Response([], status=status.HTTP_200_OK)
 
         pets = user_profile.favorite_pets
 

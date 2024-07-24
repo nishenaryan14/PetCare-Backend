@@ -23,7 +23,7 @@ class UserSerializer(serializers.Serializer):
 
 
 class PetSerializer(serializers.Serializer):
-    pet_id = serializers.IntegerField()
+    # pet_id = serializers.IntegerField()
     animal = serializers.CharField(max_length=50)
     breed = serializers.CharField(max_length=50)
     climate = serializers.CharField(max_length=50)

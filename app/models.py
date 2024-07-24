@@ -11,13 +11,13 @@ class Pet(Document):
         ('bird', 'Bird')
     ]
 
-    pet_id = IntField()
+    # pet_id = IntField()
     animal = StringField(choices=ANIMAL_CHOICES)
-    breed = StringField(max_length=50)
+    breed = StringField(max_length=50, required=True, unique=True)
     climate = StringField(max_length=50)
 
     def __str__(self):
-        return f"{self.pet_id} {self.animal} {self.breed}"
+        return f"{self.animal} {self.breed}"
 
 
 class User(Document):
