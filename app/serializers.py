@@ -23,15 +23,30 @@ class UserSerializer(serializers.Serializer):
 
 
 class PetSerializer(serializers.Serializer):
-    pet_id = serializers.IntegerField(source='id')
+    pet_id = serializers.IntegerField()
     animal = serializers.CharField(max_length=50)
     breed = serializers.CharField(max_length=50)
     climate = serializers.CharField(max_length=50)
 
     def create(self, validated_data):
         pet = Pet(**validated_data)
+        # pet = Pet(pet_id=151, animal="dog", breed="Labrador", climate="Temperate")
+        # print(Pet._get_collection().index_information())
+
         pet.save()
         return pet
+
+        # if pet.pet_id is None:
+        #     raise serializers.ValidationError("pet_id cannot be null")
+        #
+        # try:
+        #     pet = Pet(pet_id=150, animal= validated_data['animal'], breed= validated_data['breed'],
+        #               climate= validated_data['climate'])
+        #     pet.save()
+        #     print("Pet saved successfully")
+        # except Exception as e:
+        #     print(f"Error saving pet: {str(e)}")
+        # raise
 
 
 class UserProfileSerializer(serializers.Serializer):

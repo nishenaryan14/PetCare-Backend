@@ -11,7 +11,7 @@ class Pet(Document):
         ('bird', 'Bird')
     ]
 
-    pet_id = IntField(unique=True, primary_key=True)
+    pet_id = IntField()
     animal = StringField(choices=ANIMAL_CHOICES)
     breed = StringField(max_length=50)
     climate = StringField(max_length=50)

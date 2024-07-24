@@ -395,14 +395,14 @@ class LoginView(APIView):
             return Response({"error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
 
 
-def create_pet(pet_data):
-    serializer = PetSerializer(data=pet_data)
-    if serializer.is_valid():
-        pet = serializer.save()
-        print(pet)
-        return pet
-    else:
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+# def create_pet(pet_data):
+#     serializer = PetSerializer(data=pet_data)
+#     if serializer.is_valid():
+#         pet = serializer.save()
+#         print(pet)
+#         return pet
+#     else:
+#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class AddFavoritePetView(APIView):
@@ -417,14 +417,17 @@ class AddFavoritePetView(APIView):
             return Response({'error': 'Missing pet_id in request data'}, status=status.HTTP_400_BAD_REQUEST)
 
         try:
-            pet = Pet.objects.get(pk=pet_id)  # Use MongoEngine's get with pk
+            pet = Pet.objects.get(pet_id=pet_id)  # Use MongoEngine's get with pk
+
         except DoesNotExist:
+            print("Pet does not exist")
             pet_data = request.data.copy()  # Avoid modifying original request data
             serializer = PetSerializer(data=pet_data)
             if serializer.is_valid():
+                print("new Pet data validated")
                 pet = serializer.save()  # Save the pet first
-                print(pet_data)
-                print(serializer.data)
+                print(pet)
+                # print(serializer.data)
 
             else:
                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -440,8 +443,6 @@ class AddFavoritePetView(APIView):
         profile.favorite_pets.append(pet)
         profile.save()
         return Response({"message": "Pet added to favorites"}, status=status.HTTP_200_OK)
-
-    #TODO: pet info not getting stored in pet collection
 
 
 class RemoveFavoritePetView(APIView):
