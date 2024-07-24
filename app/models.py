@@ -17,7 +17,7 @@ class Pet(Document):
     climate = StringField(max_length=50)
 
     def __str__(self):
-        return self.animal
+        return f"{self.pet_id} {self.animal} {self.breed}"
 
 
 class User(Document):
@@ -37,7 +37,7 @@ class User(Document):
 
 
 class UserProfile(Document):
-    user = ReferenceField('User', reverse_delete_rule=CASCADE)
+    user = ReferenceField('User', reverse_delete_rule=CASCADE, unique=True)
     favorite_pets = ListField(ReferenceField(Pet))
 
     def __str__(self):

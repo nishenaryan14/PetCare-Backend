@@ -4,9 +4,13 @@ from .models import User, Pet, UserProfile
 
 
 class UserSerializer(serializers.Serializer):
+    id = serializers.CharField(read_only=True)
     name = serializers.CharField(max_length=50)
     email = serializers.EmailField()
     password = serializers.CharField(write_only=True, max_length=128)
+    # class Meta:
+    #     model = User
+    #     fields = ('id', 'username', 'email')
 
     def create(self, validated_data):
         user = User(
@@ -19,13 +23,15 @@ class UserSerializer(serializers.Serializer):
 
 
 class PetSerializer(serializers.Serializer):
-    pet_id = serializers.IntegerField()
-    animal = serializers.ChoiceField(choices=Pet.ANIMAL_CHOICES)
+    pet_id = serializers.IntegerField(source='id')
+    animal = serializers.CharField(max_length=50)
     breed = serializers.CharField(max_length=50)
     climate = serializers.CharField(max_length=50)
 
     def create(self, validated_data):
-        return Pet(**validated_data)
+        pet = Pet(**validated_data)
+        pet.save()
+        return pet
 
 
 class UserProfileSerializer(serializers.Serializer):
