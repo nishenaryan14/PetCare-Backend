@@ -9,6 +9,7 @@ from django.views.decorators.csrf import csrf_exempt
 import requests
 from pymongo import MongoClient
 import os
+from django.core.paginator import Paginator
 
 client = MongoClient(os.environ.get("MONGODB_URI"))
 db = client['pet_care']
@@ -329,6 +330,8 @@ def get_climate_data(location):
 class SuggestBreedView(APIView):
     def get(self, request):
         location = request.GET.get('location')
+        page = int(request.GET.get('page', 1))
+        limit = int(request.GET.get('limit', 25))
 
         if not location:
             return Response({"error": "Location parameter is required"}, status=status.HTTP_400_BAD_REQUEST)
@@ -354,7 +357,16 @@ class SuggestBreedView(APIView):
             breed_info = get_breed_info(breed)
             breeds_with_info.append(breed_info)
 
-        return Response({"location": location, "suitable_breeds": breeds_with_info}, status=status.HTTP_200_OK)
+        paginator = Paginator(breeds_with_info, limit)
+        page_obj = paginator.get_page(page)
+
+        return Response({
+            "location": location,
+            "current_page": page,
+            "total_pages": paginator.num_pages,
+            "total_breeds": paginator.count,
+            "suitable_breeds": list(page_obj)
+        }, status=status.HTTP_200_OK)
 
 
 
