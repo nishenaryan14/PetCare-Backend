@@ -4,6 +4,14 @@ from mongoengine import connect
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+# Static files (CSS, JavaScript, Images)
+STATIC_URL = '/static/'
+
+# The directory where static files will be collected
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+
+# Additional locations to search for static files
+STATICFILES_DIRS = [BASE_DIR / 'static']
 
 # Quick-start development settings - unsuitable for production
 SECRET_KEY = 'django-insecure-07zheu5id@&!6al_wcr(vy%fgv%6f@nd!gcu8t6&&o7hy$np6a'
@@ -23,6 +31,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'whitenoise.middleware.WhiteNoiseMiddleware', 
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
