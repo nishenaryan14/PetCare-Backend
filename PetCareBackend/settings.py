@@ -4,7 +4,6 @@ from mongoengine import connect
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
 # Static files (CSS, JavaScript, Images)
 STATIC_URL = '/static/'
 
@@ -18,6 +17,7 @@ STATICFILES_DIRS = [BASE_DIR / 'static']
 SECRET_KEY = 'django-insecure-07zheu5id@&!6al_wcr(vy%fgv%6f@nd!gcu8t6&&o7hy$np6a'
 DEBUG = True
 ALLOWED_HOSTS = ["*"]
+CORS_ORIGIN_ALLOW_ALL = True
 
 INSTALLED_APPS = [
     "rest_framework",
@@ -27,12 +27,10 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    'corsheaders',  # Add this line
     'app.apps.AppConfig',
 ]
 
 MIDDLEWARE = [
-    'whitenoise.middleware.WhiteNoiseMiddleware', 
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -40,7 +38,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    'corsheaders.middleware.CorsMiddleware',  # Add this line
+    'corsheaders.middleware.CorsMiddleware',
 ]
 
 ROOT_URLCONF = "PetCareBackend.urls"
@@ -66,11 +64,11 @@ WSGI_APPLICATION = "PetCareBackend.wsgi.application"
 # Database (MongoDB)
 MONGODB_URI = "mongodb+srv://root:database@cluster0.upnhy88.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0&tlsAllowInvalidCertificates=true"
 
+
 connect(
     db='pet_care',
     host=MONGODB_URI
 ) 
-
 AUTH_PASSWORD_VALIDATORS = [
     {
         "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
@@ -85,9 +83,5 @@ TIME_ZONE = "UTC"
 USE_I18N = True
 USE_TZ = True
 
+STATIC_URL = "static/"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
-
-# CORS Configuration
-CORS_ALLOWED_ORIGINS = [
-    "https://pet-care-frontend-black.vercel.app",
-]
